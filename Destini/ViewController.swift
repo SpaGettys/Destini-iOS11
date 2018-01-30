@@ -28,6 +28,9 @@ class ViewController: UIViewController {
     let story5 = "As you smash through the guardrail and careen towards the jagged rocks below you reflect on the dubious wisdom of stabbing someone while they are driving a car you are in."
     let story6 = "You bond with the murderer while crooning verses of \"Can you feel the love tonight\". He drops you off at the next town. Before you go he asks you if you know any good places to dump bodies. You reply: \"Try the pier.\""
     
+    // initialize our storyState as 1
+    let storyState: Int = 1
+    
     
     // UI Elements linked to the storyboard
     @IBOutlet weak var topButton: UIButton!         // Has TAG = 1
@@ -44,6 +47,9 @@ class ViewController: UIViewController {
         
         
         // TODO Step 3: Set the text for the storyTextView, topButton, bottomButton, and to T1_Story, T1_Ans1, and T1_Ans2
+        storyTextView.text = story1
+        topButton.setTitle(answer1a, for: .normal)
+        bottomButton.setTitle(answer1b, for: .normal)
         
     }
 
@@ -52,13 +58,42 @@ class ViewController: UIViewController {
     @IBAction func buttonPressed(_ sender: UIButton) {
     
         // TODO Step 4: Write an IF-Statement to update the views
+        if sender.tag == 1 && storyTextView.text == story1 {
+            updateButtonTitles(aText: answer3a, bText: answer3b)
+        }
+        else if sender.tag == 2 && storyTextView.text == story1 {
+            updateButtonTitles(aText: answer2a, bText: answer2b)
+        }
+        else if sender.tag == 1 && storyTextView.text == story2 {
+            updateButtonTitles(aText: answer3a, bText: answer2b)
+        }
                 
         // TODO Step 6: Modify the IF-Statement to complete the story
-        
+        if sender.tag == 1 && storyTextView.text == story1 {
+            storyTextView.text = story3
+        }
+        else if sender.tag == 2 && storyTextView.text == story1 {
+            storyTextView.text = story2
+        }
+        else if sender.tag == 1 && storyTextView.text == story3 {
+            storyTextView.text = story6
+        }
+        else if sender.tag == 2 && storyTextView.text == story3 {
+            storyTextView.text = story5
+        }
+        else if sender.tag == 1 && storyTextView.text == story2 {
+            storyTextView.text = story3
+        }
+        else if sender.tag == 2 && storyTextView.text == story2 {
+            storyTextView.text = story4
+        }
     
     }
     
-
+    func updateButtonTitles(aText: String, bText: String){
+        topButton.setTitle(aText, for: .normal)
+        bottomButton.setTitle(bText, for: .normal)
+    }
 
 
 }
