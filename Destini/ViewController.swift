@@ -9,7 +9,7 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    
     // Our strings
     let story1 = "Your car has blown a tire on a winding road in the middle of nowhere with no cell phone reception. You decide to hitchhike. A rusty pickup truck rumbles to a stop next to you. A man with a wide brimmed hat with soulless eyes opens the passenger door for you and asks: \"Need a ride, boy?\"."
     let answer1a = "I\'ll hop in. Thanks for the help!"
@@ -28,73 +28,82 @@ class ViewController: UIViewController {
     let story5 = "As you smash through the guardrail and careen towards the jagged rocks below you reflect on the dubious wisdom of stabbing someone while they are driving a car you are in."
     let story6 = "You bond with the murderer while crooning verses of \"Can you feel the love tonight\". He drops you off at the next town. Before you go he asks you if you know any good places to dump bodies. You reply: \"Try the pier.\""
     
-    // initialize our storyState as 1
-    let storyState: Int = 1
-    
     
     // UI Elements linked to the storyboard
     @IBOutlet weak var topButton: UIButton!         // Has TAG = 1
     @IBOutlet weak var bottomButton: UIButton!      // Has TAG = 2
     @IBOutlet weak var storyTextView: UILabel!
+    @IBOutlet weak var restartButton: UIButton!
     
-    // TODO Step 5: Initialise instance variables here
-    
-    
-    
+    // Initialize our storyState as 1 (top of story tree)
+    var storyState: Int = 1 // 1:2:3 -> story1:story2:story3
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-        // TODO Step 3: Set the text for the storyTextView, topButton, bottomButton, and to T1_Story, T1_Ans1, and T1_Ans2
-        storyTextView.text = story1
-        topButton.setTitle(answer1a, for: .normal)
-        bottomButton.setTitle(answer1b, for: .normal)
-        
+        //Set the text for the storyTextView, topButton, bottomButton, and to T1_Story, T1_Ans1, and T1_Ans2
+        initializeStory()
     }
-
     
     // User presses one of the buttons
     @IBAction func buttonPressed(_ sender: UIButton) {
-    
-        // TODO Step 4: Write an IF-Statement to update the views
-        if sender.tag == 1 && storyTextView.text == story1 {
+        
+        // Write an IF-Statement to update the views
+        if sender.tag == 1 && (storyState == 1 || storyState == 2) {
             updateButtonTitles(aText: answer3a, bText: answer3b)
+            updateStoryTextAndState(storyText: story3, state: 3)
         }
-        else if sender.tag == 2 && storyTextView.text == story1 {
+        else if sender.tag == 2 && storyState == 1 {
             updateButtonTitles(aText: answer2a, bText: answer2b)
+            updateStoryTextAndState(storyText: story2, state: 2)
         }
-        else if sender.tag == 1 && storyTextView.text == story2 {
-            updateButtonTitles(aText: answer3a, bText: answer2b)
+        else if sender.tag == 1 && storyState == 3 {
+            hideButtons()
+            updateStoryTextAndState(storyText: story6, state: 6)
         }
-                
-        // TODO Step 6: Modify the IF-Statement to complete the story
-        if sender.tag == 1 && storyTextView.text == story1 {
-            storyTextView.text = story3
+        else if sender.tag == 2 && storyState == 3 {
+            hideButtons()
+            updateStoryTextAndState(storyText: story5, state: 5)
         }
-        else if sender.tag == 2 && storyTextView.text == story1 {
-            storyTextView.text = story2
+        else if sender.tag == 2 && storyState == 2 {
+            hideButtons()
+            updateStoryTextAndState(storyText: story4, state: 4)
         }
-        else if sender.tag == 1 && storyTextView.text == story3 {
-            storyTextView.text = story6
+        
+        // Modify the IF-Statement to complete the story
+        if storyState == 4 || storyState == 5 || storyState == 6 {
+            restartButton.isHidden = false
         }
-        else if sender.tag == 2 && storyTextView.text == story3 {
-            storyTextView.text = story5
-        }
-        else if sender.tag == 1 && storyTextView.text == story2 {
-            storyTextView.text = story3
-        }
-        else if sender.tag == 2 && storyTextView.text == story2 {
-            storyTextView.text = story4
-        }
-    
+        
     }
     
     func updateButtonTitles(aText: String, bText: String){
         topButton.setTitle(aText, for: .normal)
         bottomButton.setTitle(bText, for: .normal)
     }
-
-
+    
+    func hideButtons(){
+        topButton.isHidden = true
+        bottomButton.isHidden = true
+    }
+    
+    func updateStoryTextAndState(storyText: String, state: Int){
+        storyTextView.text = storyText
+        storyState = state
+    }
+    
+    @IBAction func restartPressed(_ sender: UIButton) {
+        initializeStory()
+    }
+    
+    func initializeStory(){
+        storyTextView.text = story1
+        updateButtonTitles(aText: answer1a, bText: answer1b)
+        restartButton.isHidden = true
+        topButton.isHidden = false
+        bottomButton.isHidden = false
+        storyState = 1
+    }
+    
 }
 
